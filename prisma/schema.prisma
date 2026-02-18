@@ -8,3 +8,104 @@ generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
+
+enum RoleUser {
+  CUSTOMER
+  ADMIN
+}
+
+enum TypeSeat {
+  ECONOMY
+  BUSINESS
+  FIRST
+}
+
+enum StatusTicket {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id String @id @default(cuid())
+
+  name     String
+  email    String   @unique
+  password String
+  passport String?  @unique
+  role     RoleUser @default(CUSTOMER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  tickets   Ticket[]
+}
+
+model Airplane {
+  id String @id @default(cuid())
+
+  code  String @default("ABC-123")
+  image String
+  name  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  flights Flight[]
+}
+
+model Flight {
+  id String @id @default(cuid())
+
+  planeId String
+  plane   Airplane @relation(fields: [planeId], references: [id])
+
+  departureDate       DateTime
+  departureCity       String
+  departureCityCode   String
+  arrivalDate         DateTime
+  destinationCity     String
+  destinationCityCode String
+  price               Int
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  flightSeats FlightSeat[]
+  tickets     Ticket[]
+}
+
+model FlightSeat {
+  id String @id @default(cuid())
+
+  flightId String
+  flight   Flight @relation(fields: [flightId], references: [id])
+
+  seatNumber String
+  isBooked   Boolean  @default(false)
+  type       TypeSeat
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  tickets   Ticket[]
+}
+
+model Ticket {
+  id String @id @default(cuid())
+
+  flightId String
+  flight   Flight @relation(fields: [flightId], references: [id])
+
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id])
+
+  seatId String
+  seat   FlightSeat @relation(fields: [seatId], references: [id])
+
+  code          String       @unique
+  bookingDate   DateTime
+  price         BigInt
+  status        StatusTicket @default(PENDING)
+  tokenMidtrans String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
