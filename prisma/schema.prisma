@@ -9,6 +9,10 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+datasource db {
+  provider = "postgresql"
+}
+
 enum RoleUser {
   CUSTOMER
   ADMIN
@@ -91,6 +95,8 @@ model FlightSeat {
 model Ticket {
   id String @id @default(cuid())
 
+  code String @unique
+
   flightId String
   flight   Flight @relation(fields: [flightId], references: [id])
 
@@ -100,10 +106,9 @@ model Ticket {
   seatId String
   seat   FlightSeat @relation(fields: [seatId], references: [id])
 
-  code          String       @unique
   bookingDate   DateTime
   price         BigInt
-  status        StatusTicket @default(PENDING)
+  status        StatusTicket
   tokenMidtrans String?
 
   createdAt DateTime @default(now())
