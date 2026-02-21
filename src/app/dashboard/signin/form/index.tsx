@@ -3,7 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ActionResult, handleSignIn } from "./action";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { authClient } from "../../../../../lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const initialFormState: ActionResult = {
   errorTitle: null,
@@ -13,6 +15,27 @@ const initialFormState: ActionResult = {
 export default function FormSignIn() {
   const [state, formAction] = useActionState(handleSignIn, initialFormState);
 
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const route = useRouter();
+
+  const submit = async () => {
+    await authClient.signIn.email(
+      { email, password },
+      {
+        async onSuccess(context) {
+          if (context.data.twoFactorRedirect) {
+            route.push("/two-factor");
+          } else {
+            route.push("/dashboard");
+          }
+        },
+      },
+      setLoading(false),
+    );
+  };
+
   console.log(state);
 
   return (
@@ -21,18 +44,20 @@ export default function FormSignIn() {
       <form action={formAction}>
         <div className="space-y-4">
           <Input
-            type="text"
+            type="email"
             placeholder="Enter your email"
-            typeof="email"
             name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <Input
-            type="text"
+            type="password"
             placeholder="Enter your password"
-            typeof="password"
             name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" onClick={submit}>
             Submit
           </Button>
         </div>

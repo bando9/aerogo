@@ -8,7 +8,7 @@ async function main() {
       name: "Admin",
       email: "admin@admin.com",
       role: "ADMIN",
-      password: "$2a$12$XOdwaiq7R48y6BTobWLLsujq/eDYS2Pfy.m5wgMoaDnu9u.XVz7uG",
+      password: "$2a$12$XOdwaiq7R48y6BTobWLLsujq/eDYS2Pfy.m5wgMoaDnu9u.XVz7uG", // admin123
     },
   });
   console.log({ userSeed });
