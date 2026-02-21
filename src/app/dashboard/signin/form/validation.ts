@@ -10,5 +10,8 @@ export const FormSchema = z.object({
       },
     })
     .nonempty({ message: "email required" }),
-  password: z.string().nonempty({ message: "password required" }),
+  password: z
+    .string()
+    .nonempty({ message: "password required" })
+    .min(5, { message: "min 5 character" }),
 });
