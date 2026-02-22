@@ -1,5 +1,10 @@
+import { headers } from "next/headers";
+import { auth } from "../../../lib/auth";
+
 async function DashboardPage() {
-  const session = null;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session) {
     return <div className="p-10 text-center">Please sign in first.</div>;
