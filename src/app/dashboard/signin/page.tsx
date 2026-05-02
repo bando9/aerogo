@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import FormSignIn from "./form";
 
 export const metadata: Metadata = {
   title: "Dashboard | Sign In",
 };
 
 function SignInPage() {
-  return <div>SignInPage</div>;
+  return <FormSignIn />;
 }
 
 export default SignInPage;
