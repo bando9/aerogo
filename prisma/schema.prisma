@@ -9,6 +9,10 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+datasource db {
+  provider = "postgresql"
+}
+
 enum RoleUser {
   CUSTOMER
   ADMIN
