@@ -9,7 +9,11 @@
     "lint": "eslint",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:studio": "prisma studio --browser none"
+    "db:studio": "prisma studio --browser none",
+    "db:gen": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
