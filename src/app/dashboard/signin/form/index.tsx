@@ -8,14 +8,22 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { ActionResult, createSignIn } from "./actions";
+import { useActionState } from "react";
+
+const initialFormState: ActionResult = {
+  errorTitle: null,
+  errorDescription: [],
+};
 
 function FormSignIn() {
-  const { register, handleSubmit } = useForm();
+  const [state, formAction, isPending] = useActionState(
+    createSignIn,
+    initialFormState,
+  );
 
-  function onSubmit(data) {
-    console.log(data);
-  }
+  console.log(state);
+
   return (
     <div className="w-full h-screen">
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -26,15 +34,15 @@ function FormSignIn() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="w-full max-w-sm" onSubmit={handleSubmit(onSubmit)}>
+          <form className="w-full max-w-sm" action={formAction}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="form-email">Email</FieldLabel>
                 <Input
                   id="form-email"
                   type="email"
+                  name="email"
                   placeholder="bando@example.com"
-                  {...register("email")}
                 />
                 <FieldDescription>
                   We&apos;ll never share your email with anyone.
@@ -45,15 +53,17 @@ function FormSignIn() {
                 <Input
                   id="form-password"
                   type="password"
+                  name="password"
                   placeholder="********"
-                  {...register("password")}
                 />
               </Field>
               <Field orientation="horizontal">
                 <Button type="button" variant="outline">
                   Cancel
                 </Button>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Loading..." : "Submit"}
+                </Button>
               </Field>
             </FieldGroup>
           </form>
